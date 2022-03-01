@@ -33,7 +33,7 @@ namespace Cards
             //initialize faces
             Face[] faces = new Face[]
             {
-                Face.two, Face.three, Face.four, Face.five, Face.six, Face.seven, Face.eight, Face.nine, Face.ten, Face.Jester, Face.Queen, Face.King, Face.Ace
+                Face.two, Face.three, Face.four, Face.five, Face.six, Face.seven, Face.eight, Face.nine, Face.ten, Face.J, Face.Q, Face.K, Face.A
             };
 
             Suit[] suits = new Suit[]
@@ -73,9 +73,86 @@ namespace Cards
 
         public override string ToString()
         {
-            return "Your card is " + face + " of  " + suit;
+            string suitInUnicode = "";
+            switch (this.suit)
+            {
+                case Suit.spades:
+                    suitInUnicode = "\u2663";
+                    break;
+                case Suit.club:
+                    suitInUnicode = "\u2660";
+                    break;
+                case Suit.diamond:
+                    suitInUnicode = "\u2666";
+                    break;
+                case Suit.hearts:
+                    suitInUnicode = "\u2665";
+                    break;
+
+                default:
+                    suitInUnicode = "";
+                    break;
+            }
+
+
+
+
+            if ((int)face > 10)
+            {
+
+                return face + "-" + suitInUnicode;
+            }
+            return (int)face + "-" + suitInUnicode;
         }
+
+        public  void Display()
+        {
+            string suitInUnicode = "";
+            switch (this.suit)
+            {
+                case Suit.spades:
+                    suitInUnicode = "\u2663";
+                    break;
+                case Suit.club:
+                    suitInUnicode = "\u2660";
+                    break;
+                case Suit.diamond:
+                    suitInUnicode = "\u2666";
+                    break;
+                case Suit.hearts:
+                    suitInUnicode = "\u2665";
+                    break;
+
+                default:
+                    suitInUnicode = "";
+                    break;
+            }
+
+
+            if (suit == Suit.club || suit == Suit.spades)
+            {
+                Console.ForegroundColor = ConsoleColor.Black;
+            }
+            else
+            {
+
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+
+
+            if ((int)face > 10)
+            {
+                 Console.Write(face + "-" + suitInUnicode);
+            }
+            else
+            {
+                Console.Write((int)face + "-" + suitInUnicode);
+            }
+        }
+
+
     }
+
 
     enum Face
     {
@@ -88,10 +165,11 @@ namespace Cards
         eight = 8,
         nine = 9,
         ten = 10,
-        Jester = 11,
-        Queen = 12,
-        King = 13,
-        Ace = 14
+        J = 11,
+        Q = 12,
+        K = 13,
+        A = 14
+    
     }
 
     enum Suit
@@ -388,6 +466,22 @@ namespace Cards
             }
             return groupOfCards.card3;
         }
+
+        public override String ToString()
+        {
+            return this.card1.ToString() + ", " + this.card2.ToString() + ", " + this.card3.ToString();
+
+        }
+
+        public void Display()
+        {
+            this.card1.Display();
+            Console.Write(", ");
+            this.card2.Display();  
+            Console.Write(", ");
+            this.card3.Display();
+            Console.WriteLine();
+        }
     }
 
 
@@ -400,28 +494,52 @@ namespace Cards
 
 
             List<GroupOfCards> listOfGroupOfCards = new List<GroupOfCards>();
-            //max of 17 players. 
-            for (int i = 0; i < 6-1; i+=3)
 
+
+            int numberOfPlayers = 10, randomNumber =0;
+            Random r = new Random();
+            //max of 17 players. 
+            for (int i = 0; i < numberOfPlayers; i++)
             {
-                Card card1 = deckA.getCards().ElementAt(i);//make this random
-                Card card2 = deckA.getCards().ElementAt(i+1);//make this random
-                Card card3 = deckA.getCards().ElementAt(i+2);//make this random
-                deckA.getCards().RemoveAt(i);
-                deckA.getCards().RemoveAt(i+1);
-                deckA.getCards().RemoveAt(i+2);
+                randomNumber = r.Next(0,deckA.getCards().Count-1);
+                Card card1 = deckA.getCards().ElementAt(randomNumber);//make this random
+                deckA.getCards().RemoveAt(randomNumber);
+
+                randomNumber = r.Next(0,deckA.getCards().Count-1);
+                Card card2 = deckA.getCards().ElementAt(randomNumber);//make this random
+                deckA.getCards().RemoveAt(randomNumber);
+
+                randomNumber = r.Next(0,deckA.getCards().Count-1);
+                Card card3 = deckA.getCards().ElementAt(randomNumber);//make this random
+                deckA.getCards().RemoveAt(randomNumber);
+
                 GroupOfCards tempGroupOfCards = new GroupOfCards(card1, card2, card3);
 
                 listOfGroupOfCards.Add(tempGroupOfCards);
             }
 
+            GroupOfCards winner = listOfGroupOfCards.ElementAt(0);
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
 
-            
+            Console.WriteLine("The Cards we got");
+            Console.WriteLine();
+            foreach (var groupOfCards in listOfGroupOfCards)
+            {
+                groupOfCards.Display();
+                //Console.WriteLine();
+                if (winner.CompareTo(groupOfCards) < 0)
+                {
+                    winner = groupOfCards;
+                }
+            }
+            Console.WriteLine();
+           
+            Console.WriteLine("The Winner is");
+            winner.Display();
 
-
-
-
-
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
         }
     }
 
